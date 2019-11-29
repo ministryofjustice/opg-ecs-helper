@@ -27,5 +27,8 @@ jobs:
             dep ensure
         fi
 
-    - name: Build
+    - name: Build Runner
       run: go build -mod vendor ./cmd/runner
+
+    - name: Build Stabilizer
+      run: go build -mod vendor ./cmd/stabilizer
