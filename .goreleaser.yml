@@ -1,0 +1,21 @@
+# This is an example goreleaser.yaml file with some sane defaults.
+# Make sure to check the documentation at http://goreleaser.com
+
+project_name: opg-ecs-helper
+
+release:
+  github:
+    owner: ministryofjustice
+    name: opg-ecs-helper
+
+builds:
+  - binary: ecs-runner
+    main: ./cmd/runner/main.go
+  - binary: ecs-stabilizer
+    main: ./cmd/stabilizer/main.go
+
+archives:
+- replacements:
+    darwin: Darwin
+    linux: Linux
+    amd64: x86_64
