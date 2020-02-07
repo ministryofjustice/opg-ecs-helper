@@ -12,9 +12,14 @@ builds:
   - binary: ecs-runner
     id: ecs-runner
     main: ./cmd/runner/main.go
+    goarch:
+      - amd64
   - binary: ecs-stabilizer
     id: ecs-stabilizer
     main: ./cmd/stabilizer/main.go
+    goarch:
+      - amd64
+
 
 archives:
 - replacements:
