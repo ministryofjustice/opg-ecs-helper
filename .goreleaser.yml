@@ -10,8 +10,10 @@ release:
 
 builds:
   - binary: ecs-runner
+    id: ecs-runner
     main: ./cmd/runner/main.go
   - binary: ecs-stabilizer
+    id: ecs-stabilizer
     main: ./cmd/stabilizer/main.go
 
 archives:
