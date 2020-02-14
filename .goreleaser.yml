@@ -31,8 +31,8 @@ archives:
 brews:
   - name: ecs-runner
     github:
-      owner: tomtucka
-      name: homebrew-apps
+      owner: ministryofjustice
+      name: homebrew-opg
     folder: Formula
     homepage: https://github.com/ministryofjustice/opg-ecs-helper
     description: ecs-runner allows you to run ECS tasks
@@ -42,8 +42,8 @@ brews:
       email: goreleaser@carlosbecker.com
   - name: ecs-stabilizer
     github:
-      owner: tomtucka
-      name: homebrew-apps
+      owner: ministryofjustice
+      name: homebrew-opg
     folder: Formula
     homepage: https://github.com/ministryofjustice/opg-ecs-helper
     description: ecs-stabilizer allows you to check to makre sure services are stable
