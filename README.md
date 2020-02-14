@@ -26,11 +26,11 @@ go build -mod vendor ./cmd/stabilizer
 ## Install 
 
 ```bash
-brew install tomtucka/apps/ecs-runner
+brew install ministryofjustice/opg/ecs-runner
 ```
 
 ```bash
-brew install tomtucka/apps/ecs-stabilizer
+brew install ministryofjustice/opg/ecs-stabilizer
 ```
 
 ## Usage
