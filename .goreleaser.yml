@@ -1,0 +1,53 @@
+# Make sure to check the documentation at http://goreleaser.com
+project_name: opg-ecs-helper
+
+env_files:
+  github_token: ${{ secrets.access_token }}
+
+release:
+  github:
+    owner: ministryofjustice
+    name: opg-ecs-helper
+
+builds:
+  - binary: ecs-runner
+    id: ecs-runner
+    main: ./cmd/runner/main.go
+    goarch:
+      - amd64
+  - binary: ecs-stabilizer
+    id: ecs-stabilizer
+    main: ./cmd/stabilizer/main.go
+    goarch:
+      - amd64
+
+
+archives:
+- replacements:
+    darwin: Darwin
+    linux: Linux
+    amd64: x86_64
+
+brews:
+  - name: ecs-runner
+    github:
+      owner: tomtucka
+      name: homebrew-apps
+    folder: Formula
+    homepage: https://github.com/ministryofjustice/opg-ecs-helper
+    description: ecs-runner allows you to run ECS tasks
+    install: bin.install "ecs-runner"
+    commit_author:
+      name: goreleaserbot
+      email: goreleaser@carlosbecker.com
+  - name: ecs-stabilizer
+    github:
+      owner: tomtucka
+      name: homebrew-apps
+    folder: Formula
+    homepage: https://github.com/ministryofjustice/opg-ecs-helper
+    description: ecs-stabilizer allows you to check to makre sure services are stable
+    install: bin.install "ecs-stabilizer"
+    commit_author:
+      name: goreleaserbot
+      email: goreleaser@carlosbecker.com
