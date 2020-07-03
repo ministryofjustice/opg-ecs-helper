@@ -4,6 +4,9 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
+	"time"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
@@ -11,8 +14,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ecs"
 	. "github.com/ministryofjustice/opg-digideps/ecs_helper/internal"
-	"log"
-	"time"
 )
 
 func main() {
@@ -38,13 +39,14 @@ func main() {
 	ecsSvc := ecs.New(sess, &awsConfig)
 
 	delay := time.Second * 10
-	ctx, cancelFn := context.WithTimeout(aws.BackgroundContext(), time.Duration(timeout) * time.Second)
+	ctx, cancelFn := context.WithTimeout(aws.BackgroundContext(), time.Duration(timeout)*time.Second)
 	defer cancelFn()
 
 	start := time.Now()
 	err = ecsSvc.WaitUntilServicesStableWithContext(
 		ctx,
 		config.Services.Value,
+		request.WithWaiterMaxAttempts(100),
 		request.WithWaiterDelay(request.ConstantWaiterDelay(delay)),
 		request.WithWaiterRequestOptions(func(r *request.Request) {
 			log.Printf("waited %v for services to stabilize...\n", time.Since(start).Round(time.Second))
