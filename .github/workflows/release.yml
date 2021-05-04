@@ -36,7 +36,6 @@ jobs:
       - name: goreleaser
         uses: goreleaser/goreleaser-action@v2
         with:
-          version: ${{ steps.bump_version.outputs.tag }}
           args: release
         env:
           GITHUB_TOKEN: ${{ secrets.access_token }}
