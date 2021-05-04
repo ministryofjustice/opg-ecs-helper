@@ -31,7 +31,7 @@ archives:
 
 brews:
   - name: ecs-runner
-    github:
+    tap:
       owner: ministryofjustice
       name: homebrew-opg
     folder: Formula
@@ -42,7 +42,7 @@ brews:
       name: goreleaserbot
       email: goreleaser@carlosbecker.com
   - name: ecs-stabilizer
-    github:
+    tap:
       owner: ministryofjustice
       name: homebrew-opg
     folder: Formula
