@@ -4,6 +4,10 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
+	"os"
+	"time"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
@@ -12,9 +16,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go/service/ecs"
 	. "github.com/ministryofjustice/opg-digideps/ecs_helper/internal"
-	"log"
-	"os"
-	"time"
 )
 
 func main() {
@@ -25,11 +26,13 @@ func main() {
 	var taskName string
 	var timeout int
 	var configFile string
+	var region string
 
 	flag.String("help", "", "this help information")
 	flag.StringVar(&taskName, "task", "", "task to run")
 	flag.IntVar(&timeout, "timeout", 120, "timeout for the task")
 	flag.StringVar(&configFile, "config", "terraform.output.json", "config file for tasks")
+	flag.StringVar(&region, "region", "eu-west-1", "AWS Region")
 
 	flag.Parse()
 	if taskName == "" {
@@ -43,7 +46,7 @@ func main() {
 		log.Fatalln(err)
 	}
 	creds := stscreds.NewCredentials(sess, config.Role.Value)
-	awsConfig := aws.Config{Credentials: creds, Region: aws.String("eu-west-1")}
+	awsConfig := aws.Config{Credentials: creds, Region: aws.String(*&region)}
 	runner := Runner{Svc: ecs.New(sess, &awsConfig), Input: config.Tasks.Value[taskName]}
 	runner.Run()
 	logConfigurationOptions := runner.GetLogConfigurationOptions()
@@ -62,7 +65,7 @@ func main() {
 	}
 
 	delay := time.Second * 10
-	ctx, cancelFn := context.WithTimeout(aws.BackgroundContext(), time.Duration(timeout) * time.Second)
+	ctx, cancelFn := context.WithTimeout(aws.BackgroundContext(), time.Duration(timeout)*time.Second)
 	defer cancelFn()
 
 	err = runner.Svc.WaitUntilTasksStoppedWithContext(
