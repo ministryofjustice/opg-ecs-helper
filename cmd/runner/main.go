@@ -15,7 +15,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go/service/ecs"
-	. "github.com/ministryofjustice/opg-digideps/ecs_helper/internal"
+	. "github.com/ministryofjustice/opg-ecs-helper/ecs_helper/internal"
 )
 
 func main() {
