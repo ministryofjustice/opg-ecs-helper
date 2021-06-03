@@ -1,4 +1,4 @@
-module github.com/ministryofjustice/opg-digideps/ecs_helper
+module github.com/ministryofjustice/opg-ecs-helper/ecs_helper
 
 go 1.12
 
