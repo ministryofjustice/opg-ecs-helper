@@ -1,9 +1,6 @@
 # Make sure to check the documentation at http://goreleaser.com
 project_name: opg-ecs-helper
 
-env_files:
-  github_token: ${{ secrets.access_token }}
-
 release:
   github:
     owner: ministryofjustice
