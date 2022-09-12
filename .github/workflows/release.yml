@@ -8,7 +8,8 @@ on:
       - master
   workflow_dispatch:
 
-permissions: write-all
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -20,8 +21,11 @@ jobs:
         with:
           go-version: 1.13
         id: go
+
       - name: Check out code into the Go module directory
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Extract branch name
         shell: bash
