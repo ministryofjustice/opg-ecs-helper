@@ -49,4 +49,4 @@ jobs:
         with:
           args: release
         env:
-          GITHUB_TOKEN: ${{ secrets.access_token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
