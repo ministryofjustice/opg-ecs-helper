@@ -8,6 +8,9 @@ on:
       - master
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,7 +43,6 @@ jobs:
       - name: goreleaser
         uses: goreleaser/goreleaser-action@v3
         with:
-          version: 1.8.3
           args: release
         env:
           GITHUB_TOKEN: ${{ secrets.access_token }}
