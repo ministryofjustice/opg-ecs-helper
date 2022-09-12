@@ -1,5 +1,8 @@
 name: Release with goreleaser
 on:
+  pull_request:
+    branches:
+      - master
   push:
     branches:
       - master
@@ -35,7 +38,7 @@ jobs:
           WITH_V: true
 
       - name: goreleaser
-        uses: goreleaser/goreleaser-action@v2
+        uses: goreleaser/goreleaser-action@v3
         with:
           args: release
         env:
