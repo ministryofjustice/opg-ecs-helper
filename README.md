@@ -21,20 +21,6 @@ go build -mod vendor ./cmd/runner
 ```go
 go build -mod vendor ./cmd/stabilizer
 ```
-
-
-## Install 
-
-MacOS:
-
-```bash
-brew install ministryofjustice/opg/ecs-runner
-```
-
-```bash
-brew install ministryofjustice/opg/ecs-stabilizer
-```
-
 ## Usage
 
 ### Stabilizer
