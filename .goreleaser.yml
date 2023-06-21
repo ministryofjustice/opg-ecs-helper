@@ -25,27 +25,3 @@ archives:
       darwin: Darwin
       linux: Linux
       amd64: x86_64
-
-brews:
-  - name: ecs-runner
-    tap:
-      owner: ministryofjustice
-      name: homebrew-opg
-    folder: Formula
-    homepage: https://github.com/ministryofjustice/opg-ecs-helper
-    description: ecs-runner allows you to run ECS tasks
-    install: bin.install "ecs-runner"
-    commit_author:
-      name: goreleaserbot
-      email: goreleaser@carlosbecker.com
-  - name: ecs-stabilizer
-    tap:
-      owner: ministryofjustice
-      name: homebrew-opg
-    folder: Formula
-    homepage: https://github.com/ministryofjustice/opg-ecs-helper
-    description: ecs-stabilizer allows you to check to makre sure services are stable
-    install: bin.install "ecs-stabilizer"
-    commit_author:
-      name: goreleaserbot
-      email: goreleaser@carlosbecker.com
