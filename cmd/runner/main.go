@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -27,12 +28,14 @@ func main() {
 	var timeout int
 	var configFile string
 	var region string
+	var override string
 
 	flag.String("help", "", "this help information")
 	flag.StringVar(&taskName, "task", "", "task to run")
 	flag.IntVar(&timeout, "timeout", 120, "timeout for the task")
 	flag.StringVar(&configFile, "config", "terraform.output.json", "config file for tasks")
 	flag.StringVar(&region, "region", "eu-west-1", "AWS Region")
+	flag.StringVar(&override, "override", "", "override to run")
 
 	flag.Parse()
 	if taskName == "" {
@@ -41,6 +44,17 @@ func main() {
 	}
 
 	config := LoadConfig(configFile)
+
+	if override != "" {
+		commandList := strings.Split(override, ",")
+		commandListPointers := []*string{}
+		for k, _ := range commandList {
+			commandListPointers = append(commandListPointers, &commandList[k])
+		}
+
+		config.Tasks.Value[taskName].Overrides.ContainerOverrides[0].Command = commandListPointers
+	}
+
 	sess, err := session.NewSession()
 	if err != nil {
 		log.Fatalln(err)
