@@ -40,6 +40,7 @@ jobs:
       - name: goreleaser
         uses: goreleaser/goreleaser-action@v3
         with:
+          version: 1.18.2
           args: release
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
