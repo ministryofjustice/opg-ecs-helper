@@ -5,6 +5,10 @@ on:
       - master
   workflow_dispatch:
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,21 +30,18 @@ jobs:
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF#refs/heads/})"
         id: extract_branch
 
-      - name: Bump version
-        id: bump_version
-        uses: anothrNick/github-tag-action@1.36.0
+      - name: generate semver tag and release
+        id: semver_tag
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@73bfe6f3ea05ffbc3dd278fe29c113ec1e7dcefc # v3.1.1
+        with:
+          prerelease: false
+          default_bump: "minor"
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@9c156ee8a17a598857849441385a2041ef570552 # v6.3.0
+        with:
+          distribution: goreleaser
+          version: '~> v2'
+          args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INITIAL_VERSION: 1.0.0
-          DEFAULT_BUMP: minor
-          PRERELEASE_SUFFIX: ${{ steps.extract_branch.outputs.branch }}
-          RELEASE_BRANCHES: master
-          WITH_V: true
-
-      - name: goreleaser
-        uses: goreleaser/goreleaser-action@v3
-        with:
-          version: 1.18.2
-          args: release
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
