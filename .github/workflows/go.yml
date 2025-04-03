@@ -6,17 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  id-token: none
   contents: write
-  security-events: write
-  pull-requests: write
-  actions: none
-  checks: none
-  deployments: none
-  issues: none
-  packages: none
-  repository-projects: none
-  statuses: none
 
 jobs:
   build:
