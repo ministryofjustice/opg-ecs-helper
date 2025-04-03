@@ -11,11 +11,11 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
-	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go/service/ecs"
+	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	. "github.com/ministryofjustice/opg-ecs-helper/ecs_helper/internal"
 )
 
@@ -24,20 +24,17 @@ func main() {
 		fmt.Println("Usage: runner -task <task>")
 		flag.PrintDefaults()
 	}
-	var taskName string
+	var taskName, configFile, region, override, assumeRoleFromTFOut string
 	var timeout int
-	var configFile string
-	var region string
-	var override string
 
-	flag.String("help", "", "this help information")
 	flag.StringVar(&taskName, "task", "", "task to run")
 	flag.IntVar(&timeout, "timeout", 120, "timeout for the task")
 	flag.StringVar(&configFile, "config", "terraform.output.json", "config file for tasks")
 	flag.StringVar(&region, "region", "eu-west-1", "AWS Region")
 	flag.StringVar(&override, "override", "", "override to run")
-
+	flag.StringVar(&assumeRoleFromTFOut, "assumeRoleFromTFOut", "true", "Whether to assume role from tf output")
 	flag.Parse()
+
 	if taskName == "" {
 		fmt.Println("Error: task name not set")
 		flag.Usage()
@@ -47,11 +44,10 @@ func main() {
 
 	if override != "" {
 		commandList := strings.Split(override, ",")
-		commandListPointers := []*string{}
-		for k, _ := range commandList {
-			commandListPointers = append(commandListPointers, &commandList[k])
+		var commandListPointers []*string
+		for i := range commandList {
+			commandListPointers = append(commandListPointers, &commandList[i])
 		}
-
 		config.Tasks.Value[taskName].Overrides.ContainerOverrides[0].Command = commandListPointers
 	}
 
@@ -59,14 +55,19 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	creds := stscreds.NewCredentials(sess, config.Role.Value)
-	awsConfig := aws.Config{Credentials: creds, Region: aws.String(*&region)}
+
+	awsConfig := aws.Config{Region: aws.String(region)}
+
+	if assumeRoleFromTFOut == "true" {
+		creds := stscreds.NewCredentials(sess, config.Role.Value)
+		awsConfig.Credentials = creds
+	}
+
 	runner := Runner{Svc: ecs.New(sess, &awsConfig), Input: config.Tasks.Value[taskName]}
 	runner.Run()
 	logConfigurationOptions := runner.GetLogConfigurationOptions()
 
 	var cwLogs []Log
-
 	for _, c := range runner.Task.Containers {
 		cwLogs = append(cwLogs, Log{
 			Svc: cloudwatchlogs.New(sess, &awsConfig),
