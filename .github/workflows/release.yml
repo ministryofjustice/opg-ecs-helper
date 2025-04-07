@@ -25,7 +25,7 @@ jobs:
         uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@73bfe6f3ea05ffbc3dd278fe29c113ec1e7dcefc # v3.1.1
         with:
           prerelease: false
-          release_branch: master
+          release_branch: main
           default_bump: "minor"
 
       - name: Extract branch name
@@ -42,8 +42,7 @@ jobs:
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@9c156ee8a17a598857849441385a2041ef570552 # v6.3.0
         with:
-          distribution: goreleaser
-          version: '~> v2'
-          args: release --clean
+          version: 1.18.2
+          args: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
