@@ -20,11 +20,13 @@ import (
 )
 
 func main() {
+	// Usage help
 	flag.Usage = func() {
 		fmt.Println("Usage: runner -task <task>")
 		flag.PrintDefaults()
 	}
-	var taskName, configFile, region, override, assumeRoleFromTFOut string
+
+	var taskName, configFile, region, override, assumeRoleFromTFOut, hideLogs string
 	var timeout int
 
 	flag.StringVar(&taskName, "task", "", "task to run")
@@ -33,6 +35,8 @@ func main() {
 	flag.StringVar(&region, "region", "eu-west-1", "AWS Region")
 	flag.StringVar(&override, "override", "", "override to run")
 	flag.StringVar(&assumeRoleFromTFOut, "assumeRoleFromTFOut", "true", "Whether to assume role from tf output")
+	flag.StringVar(&hideLogs, "hideLogs", "false", "Hide logs and only show elapsed waiting time")
+
 	flag.Parse()
 
 	if taskName == "" {
@@ -83,6 +87,8 @@ func main() {
 	ctx, cancelFn := context.WithTimeout(aws.BackgroundContext(), time.Duration(timeout)*time.Second)
 	defer cancelFn()
 
+	startTime := time.Now()
+
 	err = runner.Svc.WaitUntilTasksStoppedWithContext(
 		ctx,
 		&ecs.DescribeTasksInput{
@@ -90,8 +96,13 @@ func main() {
 			Tasks:   []*string{runner.Task.TaskArn},
 		},
 		request.WithWaiterRequestOptions(func(r *request.Request) {
-			for _, l := range cwLogs {
-				l.PrintLogEvents()
+			if hideLogs == "true" {
+				elapsed := time.Since(startTime).Truncate(time.Second)
+				log.Printf("Waiting for task to finish... (elapsed: %s)", elapsed)
+			} else {
+				for _, l := range cwLogs {
+					l.PrintLogEvents()
+				}
 			}
 		}),
 		request.WithWaiterDelay(request.ConstantWaiterDelay(delay)),
