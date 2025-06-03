@@ -44,6 +44,7 @@ output "Services" {
 ```
 
 By default it will look for the outputs in `terraform.output.json`. 
+
 Running `terraform output -json > terraform.output.json` will create the file for you.
 ```bash
 aws-vault exec identity -- ecs-stabilizer
