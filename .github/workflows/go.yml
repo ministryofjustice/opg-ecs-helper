@@ -2,7 +2,7 @@ name: Buid ECS Helper
 on:
   pull_request:
     branches:
-    - master
+      - main
   workflow_dispatch:
 
 permissions:
@@ -23,22 +23,14 @@ jobs:
         prerelease: true
         default_bump: "minor"
 
-    - name: Set up Go 1.13
+    - name: Set up Go 1.25.0
       uses: actions/setup-go@v1
       with:
-        go-version: 1.13
+        go-version: 1.25.0
       id: go
 
     - name: Get dependencies
-      run: |
-        go get -v -t -d ./...
-        if [ -f Gopkg.toml ]; then
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            dep ensure
-        fi
+      run: go mod download
 
     - name: Build Runner
-      run: go build -mod vendor ./cmd/runner
-
-    - name: Build Stabilizer
-      run: go build -mod vendor ./cmd/stabilizer
+      run: go build -a -installsuffix cgo -o runner ./cmd/runner
