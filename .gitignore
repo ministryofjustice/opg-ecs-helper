@@ -1,2 +1,4 @@
 .idea
 *.iml
+# Added by goreleaser init:
+dist/
