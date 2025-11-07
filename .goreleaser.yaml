@@ -2,9 +2,11 @@ version: 2
 project_name: opg-ecs-helper
 
 release:
+  prerelease: auto
   github:
     owner: ministryofjustice
     name: opg-ecs-helper
+
 builds:
   - binary: ecs-runner
     main: ./cmd/runner/main.go
