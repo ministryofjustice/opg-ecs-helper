@@ -21,6 +21,7 @@ jobs:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v5
         with:
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
 
       - name: "Generate semver tag and release"
@@ -30,11 +31,6 @@ jobs:
           create_release: false
           default_bump: ${{ github.event_name == 'workflow_dispatch' && 'none' || 'minor' }}
           prerelease: ${{ github.ref_name == 'main' && 'false' || 'true' }}
-
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF#refs/heads/})"
-        id: extract_branch
 
       - name: Set up Go
         uses: actions/setup-go@v1
@@ -46,6 +42,6 @@ jobs:
         uses: goreleaser/goreleaser-action@9c156ee8a17a598857849441385a2041ef570552 # v6.3.0
         with:
           version: '~> v2'
-          args: release
+          args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
