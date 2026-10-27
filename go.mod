@@ -1,6 +1,6 @@
 module github.com/ministryofjustice/opg-ecs-helper/ecs_helper
 
-go 1.25.0
+go 1.27.3
 
 require github.com/aws/aws-sdk-go v1.34.0
 
